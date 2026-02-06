@@ -40,17 +40,17 @@ function getGitCommits(date) {
     nextDate.setDate(nextDate.getDate() + 1);
     const nextDateStr = formatDate(nextDate);
     
-    // 해당 날짜의 커밋 로그 가져오기
+    // 해당 날짜의 커밋 로그 가져오기 (날짜만 사용, 시간 미포함)
     const gitLog = execSync(
-      `git log --since="${dateStr} 00:00:00" --until="${nextDateStr} 00:00:00" --pretty=format:"%h|%s|%an|%ad" --date=format:"%H:%M"`,
+      `git log --since="${dateStr} 00:00:00" --until="${nextDateStr} 00:00:00" --pretty=format:"%h|%s|%an"`,
       { cwd: projectRoot, encoding: 'utf-8' }
     ).trim();
     
     if (!gitLog) return [];
     
     return gitLog.split('\n').map(line => {
-      const [hash, message, author, time] = line.split('|');
-      return { hash, message, author, time };
+      const [hash, message, author] = line.split('|');
+      return { hash, message, author };
     });
   } catch (error) {
     // Git 저장소가 아니거나 커밋이 없는 경우
@@ -119,8 +119,7 @@ function generateWorkLogTemplate(date, existingContent = '') {
     commits.forEach(commit => {
       content += `### ${commit.message}\n`;
       content += `- **커밋**: \`${commit.hash}\`\n`;
-      content += `- **작성자**: ${commit.author}\n`;
-      content += `- **시간**: ${commit.time}\n\n`;
+      content += `- **작성자**: ${commit.author}\n\n`;
     });
   } else {
     if (existingSections['✅ 완료된 작업']) {
@@ -163,14 +162,14 @@ function generateWorkLogTemplate(date, existingContent = '') {
     content += `- 발생한 이슈나 특이사항을 작성하세요\n\n`;
   }
   
-  // 작업 시간
-  content += `## ⏰ 작업 시간\n\n`;
-  if (existingSections['⏰ 작업 시간']) {
+  // 작업일 (날짜 단위만, 시간 미기록)
+  content += `## 📆 작업일\n\n`;
+  if (existingSections['📆 작업일']) {
+    content += existingSections['📆 작업일'] + '\n\n';
+  } else if (existingSections['⏰ 작업 시간']) {
     content += existingSections['⏰ 작업 시간'] + '\n\n';
   } else {
-    content += `- **시작 시간**: \n`;
-    content += `- **종료 시간**: \n`;
-    content += `- **총 작업 시간**: \n\n`;
+    content += `- **작업일**: ${dateStr}\n\n`;
   }
   
   content += `---\n\n`;

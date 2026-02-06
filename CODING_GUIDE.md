@@ -396,12 +396,11 @@ Closes #123
 
 ---
 
-## SSR/SSG 라우팅 규칙
+## SSR/SSG 라우팅 규칙 (확장 시 참고)
 
-### SEO 및 애드센스 크롤링 최적화
-**⚠️ 필수: 핵심 페이지는 반드시 SSR 또는 SSG로 구현**
+**기본 포지션**: 이 템플릿은 CSR이 기본이며, SSR/SEO 포지셔닝은 [docs/SSR_AND_SEO.md](./docs/SSR_AND_SEO.md)를 참고하세요.
 
-### 페이지 분류
+### 페이지 분류 (SSR 도입 시 참고)
 1. **SSG (Static Site Generation)**: 정적 콘텐츠 페이지
    - 홈페이지, 소개 페이지, 정적 블로그 포스트 등
    - 빌드 시점에 HTML 생성
@@ -502,46 +501,7 @@ function useApiCall() {
 ```
 
 ### API 서비스 구조
-```typescript
-// services/api.ts
-export class ApiService {
-  private abortController: AbortController | null = null
-
-  async request<T>(url: string, options?: RequestInit): Promise<T> {
-    // 이전 요청 중단
-    this.abort()
-
-    // 새 요청 생성
-    this.abortController = new AbortController()
-
-    try {
-      const response = await fetch(url, {
-        ...options,
-        signal: this.abortController.signal
-      })
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-
-      return await response.json()
-    } catch (error) {
-      if (error instanceof Error && error.name === 'AbortError') {
-        console.log('Request aborted')
-        throw error
-      }
-      throw error
-    }
-  }
-
-  abort() {
-    if (this.abortController) {
-      this.abortController.abort()
-      this.abortController = null
-    }
-  }
-}
-```
+요청 단위로 `AbortController`를 사용합니다. 컴포넌트에서는 `useApi()` 훅을 쓰면 언마운트 시 해당 컴포넌트에서 시작한 요청이 자동 중단됩니다. 구현은 `src/utils/api.ts`, `src/hooks/useApi.ts`를 참고하세요.
 
 ---
 
@@ -605,7 +565,7 @@ npm run work-log -- 2025-01-15
 - 🚧 진행 중인 작업
 - 📅 다음 작업 계획
 - 💡 이슈 및 메모
-- ⏰ 작업 시간
+- 📆 작업일 (날짜만, 시간 미기록)
 
 자세한 내용은 [작업 일지 사용 가이드](docs/WORK_LOG_GUIDE.md)를 참고하세요.
 
@@ -613,6 +573,16 @@ npm run work-log -- 2025-01-15
 
 ## 참고 자료
 
+### 프로젝트 내부 문서
+- [docs/PLAN.md](./docs/PLAN.md) — 기획·방향·요구사항
+- [docs/STRUCTURE.md](./docs/STRUCTURE.md) — 논리·책임 구조
+- [docs/STATE_FLOW.md](./docs/STATE_FLOW.md) — 상태 소유·전달·변경
+- [IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md) — 구현 예시(API, 폰트, SEO, 페이지)
+- [docs/WORK_LOG_GUIDE.md](./docs/WORK_LOG_GUIDE.md) — 작업 일지 사용법
+- [docs/SSR_AND_SEO.md](./docs/SSR_AND_SEO.md) — SSR/SEO 포지셔닝
+- [docs/REACT_PERFORMANCE_GUIDE.md](./docs/REACT_PERFORMANCE_GUIDE.md) — React 성능(실무 요약)
+
+### 외부
 - [React 공식 문서](https://react.dev)
 - [TypeScript 핸드북](https://www.typescriptlang.org/docs/)
 - [Tailwind CSS 문서](https://tailwindcss.com/docs)

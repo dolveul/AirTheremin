@@ -1,6 +1,9 @@
 /**
- * SEO 유틸리티 함수
- * 메타 태그 및 초기 HTML 최적화
+ * SEO 유틸리티 (클라이언트 환경용)
+ *
+ * 메타 태그 및 초기 HTML 최적화. document를 사용하므로 브라우저 전제입니다.
+ * SSR 환경에서는 서버에서 메타를 주입하는 SSR-safe 대안이 필요합니다.
+ * 자세한 포지셔닝: docs/SSR_AND_SEO.md
  */
 
 export interface SEOData {
@@ -13,7 +16,8 @@ export interface SEOData {
 }
 
 /**
- * 페이지 메타 태그 설정
+ * 페이지 메타 태그 설정 (클라이언트 전용)
+ * SSR 환경에서는 사용할 수 없으며, SSR-safe 대안을 별도 구현해야 합니다.
  */
 export function setPageMeta(data: SEOData): void {
   // Title 설정

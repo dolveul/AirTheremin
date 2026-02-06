@@ -2,13 +2,16 @@
 
 이 문서는 실제 구현 시 참고할 수 있는 구체적인 예시와 패턴을 제공합니다.
 
-## SSR/SSG 구현 방법
+## SSR/SSG (확장 옵션)
+
+**기본 포지션**: 이 템플릿은 CSR + 클라이언트 SEO 유틸이 기본입니다.  
+**SSR/SEO 포지셔닝 상세**: [docs/SSR_AND_SEO.md](./docs/SSR_AND_SEO.md)
 
 ### 현재 구조
-- React Router를 사용한 클라이언트 사이드 라우팅
-- SSR/SSG를 위한 기본 구조 준비 완료
+- React Router를 사용한 클라이언트 사이드 라우팅 (CSR)
+- SSR로 확장할 때 참고할 수 있는 설정 예시: `vite-ssr.config.ts`
 
-### 향후 SSR/SSG 구현 옵션
+### SSR/SSG 확장 시 참고 옵션
 
 #### 옵션 1: Vite SSR 플러그인 사용
 ```bash
@@ -41,14 +44,8 @@ function MyComponent() {
 }
 ```
 
-### 수동 중단
-```typescript
-const api = useApi()
-
-const handleCancel = () => {
-  api.abort() // 현재 진행 중인 요청 중단
-}
-```
+### 컴포넌트 언마운트 시 자동 중단
+`useApi()` 훅을 사용하면 해당 컴포넌트에서 시작한 요청에 공통 `AbortSignal`이 붙으며, 언마운트 시 자동으로 중단됩니다. 수동 중단이 필요하면 `AbortController`를 만들어 `get/post(..., { signal })`로 전달하면 됩니다.
 
 ## 폰트 크기 사용 예시
 
@@ -140,15 +137,7 @@ export default function SEOOptimizedPage() {
 }
 ```
 
-## 코드 최적화 체크리스트
+## 작업 완료 후 확인
 
-작업 완료 후 다음을 확인하세요:
-
-- [ ] 중복된 코드가 없는가?
-- [ ] 사용하지 않는 import가 제거되었는가?
-- [ ] console.log가 제거되었는가? (개발용은 개발 환경에서만)
-- [ ] 컴포넌트가 적절한 크기로 분리되었는가?
-- [ ] API 호출에 AbortController가 적용되었는가?
-- [ ] 폰트 크기가 허용된 rem 수치만 사용하는가?
-- [ ] Tailwind를 우선 사용하고, 인라인은 필요한 경우만 사용하는가?
+작업 완료 후 체크리스트는 **[CODING_GUIDE.md](./CODING_GUIDE.md)**의 코드 리뷰 체크리스트를 참고하세요.
 

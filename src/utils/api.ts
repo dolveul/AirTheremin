@@ -1,68 +1,63 @@
 /**
- * API 호출 유틸리티
- * 모든 API 호출은 AbortController를 사용하여 중단 가능하도록 구현
+ * API 호출 유틸리티 (순수 로직 레이어)
+ *
+ * 요청 단위로 AbortController를 사용합니다. 동시 요청이 서로를 취소하지 않습니다.
+ * 컴포넌트에서 사용 시에는 hooks/useApi를 사용하면 언마운트 시 자동 중단됩니다.
  */
 
-import { useEffect, useRef } from 'react'
-
-export interface ApiRequestOptions extends RequestInit {
+export interface ApiRequestOptions extends Omit<RequestInit, 'signal'> {
   timeout?: number
+  /** 전달 시 이 signal이 abort되면 요청이 중단됨 (예: useApi 훅에서 주입) */
+  signal?: AbortSignal
 }
 
 export class ApiError extends Error {
-  constructor(
-    public status: number,
-    public statusText: string,
-    message?: string
-  ) {
-    super(message || `API Error: ${status} ${statusText}`)
+  status: number
+  statusText: string
+
+  constructor(status: number, statusText: string, message?: string) {
+    super(message ?? `API Error: ${status} ${statusText}`)
     this.name = 'ApiError'
+    this.status = status
+    this.statusText = statusText
   }
 }
 
 /**
- * API 서비스 클래스
- * 모든 요청에 AbortController를 자동으로 적용
+ * 요청 하나마다 독립된 AbortController를 사용합니다.
+ * options.signal이 있으면 해당 signal이 abort될 때 요청도 중단됩니다.
  */
 export class ApiService {
-  private abortController: AbortController | null = null
   private baseURL: string
 
-  constructor(baseURL: string = '') {
+  constructor(baseURL = '') {
     this.baseURL = baseURL
   }
 
-  /**
-   * API 요청 실행
-   * @param url - 요청 URL
-   * @param options - Fetch 옵션
-   * @returns Promise<T>
-   */
-  async request<T>(
-    url: string,
-    options: ApiRequestOptions = {}
-  ): Promise<T> {
-    // 이전 요청이 있으면 중단
-    this.abort()
+  async request<T>(url: string, options: ApiRequestOptions = {}): Promise<T> {
+    const { timeout = 30000, signal: callerSignal, ...fetchOptions } = options
 
-    // 새로운 AbortController 생성
-    this.abortController = new AbortController()
+    const controller = new AbortController()
+    const signal = controller.signal
 
-    const { timeout = 30000, ...fetchOptions } = options
-
-    // 타임아웃 설정
-    const timeoutId = setTimeout(() => {
-      if (this.abortController) {
-        this.abortController.abort()
+    if (callerSignal) {
+      if (callerSignal.aborted) {
+        throw new DOMException('Aborted', 'AbortError')
       }
-    }, timeout)
+      callerSignal.addEventListener('abort', () => controller.abort())
+    }
+
+    const timeoutId =
+      timeout > 0
+        ? setTimeout(() => controller.abort(), timeout)
+        : undefined
 
     try {
       const fullUrl = this.baseURL ? `${this.baseURL}${url}` : url
 
       const response = await fetch(fullUrl, {
         ...fetchOptions,
-        signal: this.abortController.signal,
+        signal,
         headers: {
           'Content-Type': 'application/json',
           ...fetchOptions.headers,
@@ -80,8 +75,8 @@ export class ApiService {
       }
 
       const contentType = response.headers.get('content-type')
-      if (contentType && contentType.includes('application/json')) {
-        return await response.json()
+      if (contentType?.includes('application/json')) {
+        return (await response.json()) as T
       }
 
       return (await response.text()) as T
@@ -89,30 +84,21 @@ export class ApiService {
       clearTimeout(timeoutId)
 
       if (error instanceof Error && error.name === 'AbortError') {
-        console.log('Request aborted')
-        throw new Error('Request was aborted')
+        throw error
       }
-
       if (error instanceof ApiError) {
         throw error
       }
-
-      throw new Error(`Network error: ${error instanceof Error ? error.message : 'Unknown error'}`)
-    } finally {
-      this.abortController = null
+      throw new Error(
+        `Network error: ${error instanceof Error ? error.message : 'Unknown error'}`
+      )
     }
   }
 
-  /**
-   * GET 요청
-   */
   async get<T>(url: string, options?: ApiRequestOptions): Promise<T> {
     return this.request<T>(url, { ...options, method: 'GET' })
   }
 
-  /**
-   * POST 요청
-   */
   async post<T>(
     url: string,
     data?: unknown,
@@ -125,9 +111,6 @@ export class ApiService {
     })
   }
 
-  /**
-   * PUT 요청
-   */
   async put<T>(
     url: string,
     data?: unknown,
@@ -140,44 +123,17 @@ export class ApiService {
     })
   }
 
-  /**
-   * DELETE 요청
-   */
   async delete<T>(url: string, options?: ApiRequestOptions): Promise<T> {
     return this.request<T>(url, { ...options, method: 'DELETE' })
   }
-
-  /**
-   * 현재 진행 중인 요청 중단
-   */
-  abort(): void {
-    if (this.abortController) {
-      this.abortController.abort()
-      this.abortController = null
-    }
-  }
 }
 
-/**
- * 기본 API 서비스 인스턴스
- */
-export const apiService = new ApiService(
-  import.meta.env.VITE_API_BASE_URL || ''
-)
+const baseURL: string =
+  (typeof import.meta.env.VITE_API_BASE_URL === 'string'
+    ? import.meta.env.VITE_API_BASE_URL
+    : '') || ''
 
 /**
- * 커스텀 훅: API 호출 시 자동으로 cleanup 처리
+ * 기본 API 서비스 인스턴스 (VITE_API_BASE_URL 적용)
  */
-export function useApiService() {
-  const serviceRef = useRef<ApiService>(new ApiService())
-
-  useEffect(() => {
-    return () => {
-      // 컴포넌트 언마운트 시 모든 요청 중단
-      serviceRef.current.abort()
-    }
-  }, [])
-
-  return serviceRef.current
-}
-
+export const apiService = new ApiService(baseURL)
