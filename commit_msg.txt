@@ -1,0 +1,5 @@
+프로젝트 베이스 정리 및 antigravity 규칙 추가
+
+- Cursor 관련 설정 파일 제거
+- CODING_GUIDE.md 및 기본 페이지/레이아웃 컴포넌트 업데이트
+- .antigravityrules 추가

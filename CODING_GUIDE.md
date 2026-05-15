@@ -1,4 +1,4 @@
-# GDP Frontend 코딩 가이드라인
+# Base Project Frontend 코딩 가이드라인
 
 > **⚠️ 중요: 모든 코딩 작업 전에 이 문서를 반드시 확인하고 준수하세요.**
 
@@ -19,7 +19,7 @@
 
 ## 프로젝트 개요
 
-- **프로젝트명**: Gods Doodle Pad Frontend
+- **프로젝트명**: Project Base Frontend
 - **프레임워크**: React 19.2.0 + TypeScript
 - **빌드 도구**: Vite 7.2.4
 - **스타일링**: Tailwind CSS 3.4.19
@@ -52,7 +52,7 @@
 ### 디렉토리 구조
 
 ```
-gdp-front/
+base-front/
 ├── src/
 │   ├── components/          # 재사용 가능한 컴포넌트
 │   │   ├── common/         # 공통 컴포넌트 (Button, Input 등)

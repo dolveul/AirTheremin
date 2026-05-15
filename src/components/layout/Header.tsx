@@ -10,7 +10,7 @@ export default function Header() {
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="text-2xl font-bold text-gray-800">
-            GDP
+            BASE
           </Link>
           <div className="flex gap-4">
             <Link to="/" className="text-1rem text-gray-600 hover:text-gray-800">
