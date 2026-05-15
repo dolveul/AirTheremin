@@ -19,7 +19,7 @@ alwaysApply: true
 
 ## 규칙 문서 우선
 
-- 문서 작성 규칙의 진입점은 **docs/DOCS_SPEC.md**이며, 상세 규칙은 **docs/specs/\*_SPEC.md**를 따른다.
+- 문서 작성 규칙의 진입점은 **docs/DOCS_SPEC.md**이며, 상세 규칙은 **docs/specs/\*\_SPEC.md**를 따른다.
 - `PLAN/STRUCTURE/FUNCTION/DESIGN/STATE_FLOW`는 실제 프로젝트 내용 작성용으로 유지하고, 상세 규칙은 넣지 않는다.
 - 실사용 문서와 규칙이 충돌하거나 누락되면 `docs/specs/\*_SPEC.md`를 기준으로 정렬한다.
 

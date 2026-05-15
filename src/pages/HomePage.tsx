@@ -6,9 +6,7 @@
 export default function HomePage() {
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-5xl font-bold mb-4 text-gray-800">
-        Project Base에 오신 것을 환영합니다
-      </h1>
+      <h1 className="text-5xl font-bold mb-4 text-gray-800">Project Base에 오신 것을 환영합니다</h1>
       <p className="text-1rem text-gray-600 mb-8">
         이 텍스트는 초기 HTML에 포함되어 SEO와 애드센스 크롤링에 최적화되어 있습니다.
       </p>
