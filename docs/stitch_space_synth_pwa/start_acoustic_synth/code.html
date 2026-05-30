@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AcousticSynth - Aether Control</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Hanken+Grotesk:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "surface-container-lowest": "#110e0a",
+                "background": "#17130f",
+                "on-tertiary": "#532200",
+                "on-surface-variant": "#d0c5af",
+                "on-secondary": "#2d3404",
+                "surface-container": "#231f1b",
+                "on-secondary-container": "#b1bb7c",
+                "tertiary-container": "#f89c64",
+                "primary-container": "#d4af37",
+                "on-error": "#690005",
+                "surface-variant": "#39342f",
+                "surface-container-low": "#1f1b17",
+                "surface-tint": "#e9c349",
+                "on-tertiary-fixed": "#321200",
+                "on-primary-fixed": "#241a00",
+                "on-secondary-fixed": "#191e00",
+                "error-container": "#93000a",
+                "secondary-fixed-dim": "#c3cc8c",
+                "on-error-container": "#ffdad6",
+                "surface-bright": "#3d3833",
+                "tertiary": "#ffc19e",
+                "inverse-surface": "#eae1da",
+                "on-tertiary-container": "#723200",
+                "tertiary-fixed": "#ffdbc9",
+                "on-secondary-fixed-variant": "#434b18",
+                "primary": "#f2ca50",
+                "surface-container-highest": "#39342f",
+                "on-primary-container": "#554300",
+                "secondary-container": "#434b18",
+                "primary-fixed": "#ffe088",
+                "inverse-on-surface": "#34302b",
+                "error": "#ffb4ab",
+                "surface-container-high": "#2e2925",
+                "on-tertiary-fixed-variant": "#753401",
+                "on-primary": "#3c2f00",
+                "secondary-fixed": "#dfe8a6",
+                "tertiary-fixed-dim": "#ffb68c",
+                "outline-variant": "#4d4635",
+                "on-primary-fixed-variant": "#574500",
+                "outline": "#99907c",
+                "on-surface": "#eae1da",
+                "on-background": "#eae1da",
+                "inverse-primary": "#735c00",
+                "surface": "#17130f",
+                "primary-fixed-dim": "#e9c349",
+                "secondary": "#c3cc8c",
+                "surface-dim": "#17130f"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+            },
+            "spacing": {
+                "gutter": "24px",
+                "panel-padding": "32px",
+                "margin-desktop": "64px",
+                "unit": "8px",
+                "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                "headline-xl": ["Source Serif 4"],
+                "headline-lg": ["Source Serif 4"],
+                "label-caps": ["JetBrains Mono"],
+                "body-md": ["Hanken Grotesk"],
+                "headline-lg-mobile": ["Source Serif 4"],
+                "data-mono": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .wood-texture {
+            background-color: #17130f;
+            background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 2px, transparent 2px, transparent 4px),
+                              linear-gradient(to bottom, rgba(35, 31, 27, 0.8), rgba(23, 19, 15, 0.95));
+        }
+        .brass-plate {
+            background: linear-gradient(145deg, #d4af37, #b8860b);
+            box-shadow: 2px 2px 0px #554300, inset 1px 1px 2px rgba(255,255,255,0.3);
+        }
+        .copper-plate {
+            background: linear-gradient(145deg, #b87333, #8b4513);
+            box-shadow: 1px 1px 0px #321200;
+        }
+        .rivet {
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle at 30% 30%, #99907c, #4d4635);
+            border-radius: 50%;
+            box-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+        }
+        .amber-glow-text {
+            text-shadow: 0 0 10px rgba(242, 202, 80, 0.6);
+        }
+        .mechanical-hover:active {
+            transform: translateY(2px);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+        }
+        .glass-module {
+            background: rgba(57, 52, 47, 0.4);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary selection:text-on-primary overflow-hidden">
+<!-- Background Mahogany Grain -->
+<div class="fixed inset-0 wood-texture z-0"></div>
+<div class="fixed inset-0 bg-[radial-gradient(circle_at_center,rgba(242,202,80,0.05)_0%,transparent_70%)] z-0"></div>
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-gutter h-16 border-b border-outline-variant bg-surface-container-highest shadow-[inset_0_-2px_4px_rgba(0,0,0,0.5)]">
+<div class="flex items-center gap-4">
+<span class="font-headline-lg text-primary drop-shadow-[0_0_8px_rgba(242,202,80,0.4)]">AcousticSynth</span>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-outline hover:brightness-110 transition-all active:translate-y-0.5"><span class="material-symbols-outlined" data-icon="battery_std">battery_std</span></button>
+<button class="text-outline hover:brightness-110 transition-all active:translate-y-0.5"><span class="material-symbols-outlined" data-icon="signal_cellular_alt">signal_cellular_alt</span></button>
+<button class="text-outline hover:brightness-110 transition-all active:translate-y-0.5"><span class="material-symbols-outlined" data-icon="settings">settings</span></button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="relative z-10 w-full h-screen flex flex-col items-center justify-center p-gutter">
+<!-- Central Graphic Module -->
+<div class="relative w-full max-w-4xl aspect-square md:aspect-video flex items-center justify-center">
+<!-- Mechanical Frame -->
+<div class="absolute inset-0 glass-module rounded-xl border-4 border-outline-variant flex flex-col items-center justify-center overflow-hidden">
+<!-- Rivets at corners -->
+<div class="absolute top-4 left-4 rivet"></div>
+<div class="absolute top-4 right-4 rivet"></div>
+<div class="absolute bottom-4 left-4 rivet"></div>
+<div class="absolute bottom-4 right-4 rivet"></div>
+<!-- 3D Graphic Placeholder with Data Alt -->
+<div class="relative w-full h-full flex items-center justify-center overflow-hidden group">
+<img alt="Central UI Controller" class="w-full h-full object-cover opacity-60 mix-blend-luminosity" data-alt="A highly detailed 3D digital illustration of a steampunk-inspired hands-free controller interface. The central mechanism features a complex array of polished brass gears, glass vacuum tubes glowing with warm amber filaments, and etched mahogany panels. The lighting is low-key and dramatic, casting long shadows and highlighting the metallic sheen of the brass components. The overall aesthetic is one of artisanal engineering and precision, using a palette of deep browns, rich golds, and warm oranges without any modern digital blues or purples." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6nLS6M3Sk9Yn2TocYKS6qb2WxkZhstTjeNsHoo4BVEXDA9E8wh6-F2cXl1tMJPgBxEq-k5GtowWWstHa4f2dFQwdDL26tFzBcohzimRR2r8MohKkjjCGELBWqIBf7sUYxX7OAoj9O_mI13IgyPafHDwqgUZU7zP7kgjFb67GJf7i7sl-b18DzBi-0mB9NttaxOpSwTJv8raS6VNm_JH8hsODRgJvmMFEe5YInD64DpXCLLuDLGtORgKu3bZOYp88iFK4hcfRibgY"/>
+<!-- Decorative HUD Overlays -->
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-64 h-64 border-2 border-primary/20 rounded-full animate-[spin_20s_linear_infinite]"></div>
+<div class="absolute w-80 h-80 border border-tertiary/10 rounded-full animate-[spin_15s_linear_infinite_reverse]"></div>
+</div>
+<!-- Title & Branding -->
+<div class="absolute text-center">
+<h1 class="font-headline-xl text-primary amber-glow-text mb-2 tracking-tighter">AETHER CONTROL</h1>
+<p class="font-label-caps text-on-surface-variant tracking-[0.4em] uppercase">Harmonic Resonator v2.0</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Buttons Grid -->
+<div class="mt-12 flex flex-col md:flex-row gap-8 items-center">
+<!-- Start Performance Button -->
+<button class="group relative px-10 py-5 brass-plate rounded-lg transition-all duration-150 active:scale-95 shadow-xl hover:brightness-110 overflow-hidden">
+<div class="relative z-10 flex items-center gap-4">
+<span class="material-symbols-outlined text-on-primary-container" data-icon="play_arrow">play_arrow</span>
+<span class="font-headline-lg text-on-primary-container tracking-tight">Start Performance</span>
+</div>
+<!-- Shimmer Effect -->
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+</button>
+<!-- View Tutorial Button -->
+<button class="relative px-10 py-5 bg-surface-container border-2 border-outline-variant text-on-surface rounded-lg font-headline-lg transition-all duration-150 active:scale-95 hover:bg-surface-variant flex items-center gap-4 group">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" data-icon="menu_book">menu_book</span>
+<span>View Tutorial</span>
+<!-- Inset effect -->
+<div class="absolute inset-0 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)] opacity-50 pointer-events-none"></div>
+</button>
+</div>
+<!-- Version Plate -->
+<div class="absolute bottom-24 flex items-center">
+<div class="copper-plate px-4 py-1 rounded-sm border border-[#532200]">
+<p class="font-data-mono text-[10px] text-on-tertiary-fixed tracking-widest font-bold">v2.4.0-STABLE</p>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Frequency, Note, Gain) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-surface-container-high border-t border-outline-variant shadow-[0_-4px_10px_rgba(0,0,0,0.4)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-outline p-2 hover:text-tertiary transition-colors active:scale-90 duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="graphic_eq">graphic_eq</span>
+<span class="font-label-caps text-label-caps mt-1">Frequency</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-tertiary-container text-on-tertiary-container rounded-full p-2 border border-tertiary shadow-[0_0_12px_rgba(255,193,158,0.5)] active:scale-90 duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="music_note" style="font-variation-settings: 'FILL' 1;">music_note</span>
+<span class="font-label-caps text-label-caps mt-1">Note</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline p-2 hover:text-tertiary transition-colors active:scale-90 duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="speed">speed</span>
+<span class="font-label-caps text-label-caps mt-1">Gain</span>
+</a>
+</nav>
+<!-- Interactive Script for Atmospheric Effects -->
+<script>
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            // Subtle movement for the central module
+            const module = document.querySelector('.glass-module');
+            const moveX = (x - 0.5) * 20;
+            const moveY = (y - 0.5) * 20;
+            module.style.transform = `perspective(1000px) rotateY(${moveX}deg) rotateX(${-moveY}deg)`;
+        });
+
+        // Simulating vacuum tube flicker
+        const amberGlows = document.querySelectorAll('.amber-glow-text');
+        setInterval(() => {
+            amberGlows.forEach(el => {
+                const flicker = 0.8 + Math.random() * 0.4;
+                el.style.opacity = flicker;
+            });
+        }, 150);
+    </script>
+</body></html>

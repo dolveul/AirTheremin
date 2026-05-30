@@ -4,13 +4,30 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Project Base - SEO 최적화된 웹 애플리케이션" />
-    <meta name="keywords" content="base-front, project, template, react" />
+    <!-- Trusted Types Bypass Policy for Third-Party CDN Scripts -->
+    <script>
+      if (window.trustedTypes && window.trustedTypes.createPolicy) {
+        window.trustedTypes.createPolicy('default', {
+          createHTML: (string) => string,
+          createScript: (string) => string,
+          createScriptURL: (string) => string,
+        });
+      }
+    </script>
+    <meta name="description" content="스마트폰 카메라와 MediaPipe Hands를 활용하여 공중에 그린 손짓으로 연주하는 차세대 웹 테레민 신디사이저" />
+    <meta name="keywords" content="AirTheremin, 에어 테레민, 공간 악기, 신디사이저, MediaPipe, 웹오디오, PWA" />
     <!-- Open Graph -->
-    <meta property="og:title" content="Project Base" />
-    <meta property="og:description" content="Project Base - SEO 최적화된 웹 애플리케이션" />
+    <meta property="og:title" content="AirTheremin V2" />
+    <meta property="og:description" content="공중에 그린 손짓으로 연주하는 몽환적인 공간 가상 악기" />
     <meta property="og:type" content="website" />
-    <title>Project Base</title>
+    <title>AirTheremin V2 - 2.5D 하이브리드 공간 가상 악기</title>
+    <!-- MediaPipe CDN Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <!-- Steampunk Aesthetic Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&family=JetBrains+Mono:wght@400;500&family=Hanken+Grotesk:wght@400;600&display=swap" rel="stylesheet" />
   </head>
   <body>
     <noscript>

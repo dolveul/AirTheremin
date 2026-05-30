@@ -1,100 +1,134 @@
-/**
- * 홈페이지
- * SSG 대상 페이지 - 초기 HTML에 텍스트 포함
- */
+import { useRef, useState } from 'react';
+import { useThereminAudio } from '../hooks/useThereminAudio';
+import { useHandpose } from '../hooks/useHandpose';
+import { useThereminHandposeParser } from '../hooks/useThereminHandposeParser';
+import { useThereminCanvas } from '../hooks/useThereminCanvas';
 
-import Button from '@/components/common/Button';
+// 기능별 서브 컴포넌트 임포트 (src/components/features/theremin/)
+import LandscapeOrientationGuide from '../components/features/theremin/LandscapeOrientationGuide';
+import HeaderControlPanel from '../components/features/theremin/HeaderControlPanel';
+import EffectorConsole from '../components/features/theremin/EffectorConsole';
+import MelodyCore from '../components/features/theremin/MelodyCore';
 
 export default function HomePage() {
+  const {
+    startAudio,
+    updateRightHand,
+    updateLeftHand,
+    stopAll,
+    scale,
+    setScale,
+    isGlideEnabled,
+    setIsGlideEnabled,
+    noteInfo,
+    getAnalyser,
+  } = useThereminAudio();
+
+  const [isAudioStarted, setIsAudioStarted] = useState(false);
+
+  const bgCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const fgCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  // 1. MediaPipe 좌표 분석 커스텀 훅 결합
+  const { leftActive, rightActive, leftVal, handleHandResults, rawRightHandRef, rawLeftHandRef } =
+    useThereminHandposeParser({
+      isAudioStarted,
+      updateRightHand,
+      updateLeftHand,
+      stopAll,
+    });
+
+  // 2. 캔버스 2D 파티클 & 오실로스코프 드로잉 훅 결합
+  useThereminCanvas({
+    bgCanvasRef,
+    fgCanvasRef,
+    rightActive,
+    leftActive,
+    rawRightHandRef,
+    rawLeftHandRef,
+    volume: noteInfo.volume,
+    isAudioStarted,
+    getAnalyser,
+  });
+
+  const { isLoaded, startTracking } = useHandpose({
+    onResults: handleHandResults,
+    onBorderWarning: () => {},
+  });
+
+  // 오디오 시작 버튼 핸들러
+  const handleStart = () => {
+    startAudio();
+    setIsAudioStarted(true);
+    if (videoRef.current) {
+      startTracking(videoRef.current).catch((err) => {
+        console.error('트래킹 구동 에러:', err);
+      });
+    }
+
+    // 모바일 브라우저 환경에서 하드웨어 가로 모드 잠금 시도 (지원될 경우)
+    const screenObj = window.screen as Screen & {
+      orientation?: {
+        lock?: (orientation: 'landscape') => Promise<void>;
+      };
+    };
+    if (screenObj.orientation && typeof screenObj.orientation.lock === 'function') {
+      const lockPromise = screenObj.orientation.lock('landscape');
+      void lockPromise.catch(() => {
+        console.log('가로 모드 고정은 모바일 단말기/보안 컨텍스트에서만 지원됩니다.');
+      });
+    }
+  };
+
   return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="text-center mb-16">
-        <h1 className="text-5xl font-extrabold mb-6 text-gray-900 tracking-tight">
-          Project Base에 오신 것을 환영합니다
-        </h1>
-        <p className="text-1.125rem text-gray-600 max-w-2xl mx-auto leading-relaxed">
-          이 텍스트는 초기 HTML에 포함되어 SEO와 애드센스 크롤링에 최적화되어 있습니다. 실제 서비스
-          구축을 위한 가장 완벽한 베이스 플랫폼입니다.
-        </p>
-        <div className="mt-10 flex justify-center gap-4">
-          <Button size="lg">시작하기</Button>
-          <Button variant="outline" size="lg">
-            문서 보기
-          </Button>
-        </div>
-      </div>
+    <main className="w-screen h-screen overflow-hidden bg-[#17130f] relative font-sans text-[#d0c5af] select-none">
+      {/* 0. 스팀펑크 오리지널 마호가니 원목 질감 배경 플레이트 */}
+      <div className="absolute inset-0 mahogany-texture opacity-60 pointer-events-none z-0" />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <article className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-          <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-6">
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 10V3L4 14h7v7l9-11h-7z"
-              />
-            </svg>
-          </div>
-          <h2 className="text-1.5rem font-bold mb-3 text-gray-900">고성능 베이스</h2>
-          <p className="text-1rem text-gray-600">
-            Vite 7과 React 19을 기반으로 한 최신 스택으로 최고의 개발 속도와 사용자 경험을
-            제공합니다.
-          </p>
-        </article>
+      {/* 1. 최하단 웹캠 및 비주얼 캔버스 레이어 (트래킹을 위해 백그라운드 구동하되 화면에는 완전히 감춤) */}
+      <video
+        ref={videoRef}
+        className="absolute inset-0 w-full h-full object-cover transform scale-x-[-1] opacity-0 pointer-events-none z-0"
+        playsInline
+        muted
+      />
+      {/* Background Canvas: Ambient oscilloscope wave behind panels */}
+      <canvas
+        ref={bgCanvasRef}
+        className="absolute inset-0 w-full h-full pointer-events-none z-10"
+      />
 
-        <article className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-          <div className="w-12 h-12 bg-green-50 text-green-600 rounded-xl flex items-center justify-center mb-6">
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </div>
-          <h2 className="text-1.5rem font-bold mb-3 text-gray-900">SEO 최적화</h2>
-          <p className="text-1rem text-gray-600">
-            SSR/SSG 친화적인 구조로 검색 엔진 노출과 애드센스 승인 확률을 극대화했습니다.
-          </p>
-        </article>
+      {/* Foreground Canvas: Live tracking particles on top of panels */}
+      <canvas
+        ref={fgCanvasRef}
+        className="absolute inset-0 w-full h-full pointer-events-none z-30"
+      />
 
-        <article className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-          <div className="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-6">
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04m-1.422 13.363A5.548 5.548 0 1111 8.877V6.253a4.102 4.102 0 10-2.31 4.102z"
-              />
-            </svg>
-          </div>
-          <h2 className="text-1.5rem font-bold mb-3 text-gray-900">AI 에이전트 협업</h2>
-          <p className="text-1rem text-gray-600">
-            Antigravity 규칙이 적용되어 AI와 효율적으로 코드를 작성하고 관리할 수 있습니다.
-          </p>
-        </article>
-      </div>
-    </div>
+      {/* 3. 중앙 컨트롤 패널 (Steampunk Floating Control Board) */}
+      <HeaderControlPanel
+        isAudioStarted={isAudioStarted}
+        onStart={handleStart}
+        scale={scale}
+        onChangeScale={setScale}
+        isGlideEnabled={isGlideEnabled}
+        onToggleGlide={() => setIsGlideEnabled(!isGlideEnabled)}
+      />
+
+      {/* 4. 메인 2.5D 스플릿 연주 공간 */}
+      <section className="absolute inset-0 pt-16 md:pt-24 pb-3 px-3 md:pb-4 md:px-4 flex gap-3 md:gap-4 flex-row z-20">
+        <EffectorConsole leftActive={leftActive} leftVal={leftVal} />
+        <MelodyCore
+          rightActive={rightActive}
+          noteInfo={noteInfo}
+          isLoaded={isLoaded}
+          isAudioStarted={isAudioStarted}
+          scale={scale}
+        />
+      </section>
+
+      {/* 5. 모바일 가로 모드 유도 오버레이 */}
+      <LandscapeOrientationGuide />
+    </main>
   );
 }

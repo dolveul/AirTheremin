@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AcousticSynth | Calibration</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Hanken+Grotesk:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+        }
+        .wood-texture {
+            background-color: #17130f;
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+                repeating-linear-gradient(to right, transparent, transparent 40px, rgba(255,255,255,0.02) 41px, transparent 42px),
+                linear-gradient(to bottom, #1c1812, #110e0a);
+        }
+        .brass-border {
+            border: 1px solid #d4af37;
+            box-shadow: inset 0 0 4px #b8860b, 0 0 8px rgba(212, 175, 55, 0.2);
+        }
+        .amber-glow {
+            text-shadow: 0 0 12px #f2ca50;
+        }
+        .amber-bulb-on {
+            box-shadow: 0 0 15px 4px #f2ca50, inset 0 0 4px #000;
+        }
+        .glass-recess {
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.8), inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+        }
+        .mercury-fluid {
+            background: linear-gradient(to top, #723200, #f89c64, #f2ca50);
+            box-shadow: 0 0 10px rgba(242, 202, 80, 0.4);
+        }
+        @keyframes pulse-amber {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(0.98); }
+        }
+        .animate-pulse-slow {
+            animation: pulse-amber 3s infinite ease-in-out;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#110e0a",
+                    "background": "#17130f",
+                    "on-tertiary": "#532200",
+                    "on-surface-variant": "#d0c5af",
+                    "on-secondary": "#2d3404",
+                    "surface-container": "#231f1b",
+                    "on-secondary-container": "#b1bb7c",
+                    "tertiary-container": "#f89c64",
+                    "primary-container": "#d4af37",
+                    "on-error": "#690005",
+                    "surface-variant": "#39342f",
+                    "surface-container-low": "#1f1b17",
+                    "surface-tint": "#e9c349",
+                    "on-tertiary-fixed": "#321200",
+                    "on-primary-fixed": "#241a00",
+                    "on-secondary-fixed": "#191e00",
+                    "error-container": "#93000a",
+                    "secondary-fixed-dim": "#c3cc8c",
+                    "on-error-container": "#ffdad6",
+                    "surface-bright": "#3d3833",
+                    "tertiary": "#ffc19e",
+                    "inverse-surface": "#eae1da",
+                    "on-tertiary-container": "#723200",
+                    "tertiary-fixed": "#ffdbc9",
+                    "on-secondary-fixed-variant": "#434b18",
+                    "primary": "#f2ca50",
+                    "surface-container-highest": "#39342f",
+                    "on-primary-container": "#554300",
+                    "secondary-container": "#434b18",
+                    "primary-fixed": "#ffe088",
+                    "inverse-on-surface": "#34302b",
+                    "error": "#ffb4ab",
+                    "surface-container-high": "#2e2925",
+                    "on-tertiary-fixed-variant": "#753401",
+                    "on-primary": "#3c2f00",
+                    "secondary-fixed": "#dfe8a6",
+                    "tertiary-fixed-dim": "#ffb68c",
+                    "outline-variant": "#4d4635",
+                    "on-primary-fixed-variant": "#574500",
+                    "outline": "#99907c",
+                    "on-surface": "#eae1da",
+                    "on-background": "#eae1da",
+                    "inverse-primary": "#735c00",
+                    "surface": "#17130f",
+                    "primary-fixed-dim": "#e9c349",
+                    "secondary": "#c3cc8c",
+                    "surface-dim": "#17130f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "panel-padding": "32px",
+                    "margin-desktop": "64px",
+                    "unit": "8px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "headline-xl": ["Source Serif 4"],
+                    "headline-lg": ["Source Serif 4"],
+                    "label-caps": ["JetBrains Mono"],
+                    "body-md": ["Hanken Grotesk"],
+                    "headline-lg-mobile": ["Source Serif 4"],
+                    "data-mono": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                    "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background text-on-background wood-texture min-h-screen font-body-md selection:bg-primary-container selection:text-on-primary-container overflow-hidden">
+<!-- Top AppBar - As requested in JSON -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-gutter h-16 border-b border-outline-variant bg-surface-container-highest shadow-[inset_0_-2px_4px_rgba(0,0,0,0.5)]">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">vibration</span>
+<h1 class="font-headline-lg text-primary drop-shadow-[0_0_8px_rgba(242,202,80,0.4)] tracking-tight">AcousticSynth</h1>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline">battery_std</span>
+<span class="material-symbols-outlined text-outline">signal_cellular_alt</span>
+<span class="material-symbols-outlined text-outline hover:brightness-110 transition-all cursor-pointer active:translate-y-0.5">settings</span>
+</div>
+</div>
+</header>
+<!-- Main Calibration Canvas -->
+<main class="pt-24 pb-20 px-margin-desktop h-screen flex flex-col items-center justify-center relative">
+<!-- Header Text -->
+<div class="text-center mb-12">
+<h2 class="font-headline-xl text-headline-xl text-primary amber-glow mb-2">CALIBRATION SEQUENCE</h2>
+<p class="font-headline-lg text-on-surface-variant italic">Align your palms within the etched brass markers</p>
+</div>
+<div class="flex items-center justify-between w-full max-w-6xl gap-12">
+<!-- Left Side Panel: DEPTH_VAR -->
+<div class="w-48 flex flex-col items-center">
+<div class="mb-4 font-label-caps text-label-caps text-secondary tracking-widest">DEPTH_VAR</div>
+<div class="relative w-16 h-80 glass-recess rounded-full p-1 border border-outline-variant">
+<!-- Glass Tube markers -->
+<div class="absolute inset-0 flex flex-col justify-between py-8 px-2 pointer-events-none">
+<div class="w-full h-[1px] bg-outline opacity-30"></div>
+<div class="w-full h-[1px] bg-outline opacity-30"></div>
+<div class="w-full h-[1px] bg-tertiary-container opacity-60"></div>
+<div class="w-full h-[1px] bg-outline opacity-30"></div>
+<div class="w-full h-[1px] bg-outline opacity-30"></div>
+</div>
+<!-- Fluid Level -->
+<div class="absolute bottom-0 left-0 w-full mercury-fluid rounded-b-full transition-all duration-500" style="height: 65%;"></div>
+<!-- Copper Ring Indicator -->
+<div class="absolute left-[-8px] right-[-8px] h-2 bg-[#b8860b] border border-[#d4af37] shadow-lg rounded-sm" style="bottom: 65%;"></div>
+</div>
+</div>
+<!-- Central Calibration Zones -->
+<div class="flex-1 flex flex-col items-center justify-center gap-16">
+<div class="flex gap-24 relative">
+<!-- Left Zone -->
+<div class="w-64 h-64 rounded-full brass-border flex items-center justify-center relative overflow-hidden bg-surface-container-lowest/50 group">
+<div class="absolute inset-0 border-[2px] border-dashed border-primary/20 animate-spin-slow"></div>
+<span class="material-symbols-outlined text-6xl text-primary/30 group-hover:text-primary/60 transition-colors">back_hand</span>
+<!-- Rivets -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-outline rounded-full -mt-0.5"></div>
+<div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-outline rounded-full -mb-0.5"></div>
+</div>
+<!-- Center Countdown -->
+<div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="text-[120px] font-headline-xl leading-none text-primary amber-glow opacity-80 select-none">0</div>
+<div class="font-label-caps text-label-caps text-outline-variant -mt-4">TICKS</div>
+</div>
+<!-- Right Zone -->
+<div class="w-64 h-64 rounded-full brass-border flex items-center justify-center relative overflow-hidden bg-surface-container-lowest/50 group">
+<div class="absolute inset-0 border-[2px] border-dashed border-primary/20 animate-[spin_12s_linear_infinite_reverse]"></div>
+<span class="material-symbols-outlined text-6xl text-primary/30 group-hover:text-primary/60 transition-colors">back_hand</span>
+<!-- Rivets -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-outline rounded-full -mt-0.5"></div>
+<div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-outline rounded-full -mb-0.5"></div>
+</div>
+</div>
+<div class="flex items-center gap-4 px-12 py-4 bg-surface-container rounded-xl brass-border">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">info</span>
+<p class="font-body-md text-on-surface">Lift both hands 15cm from the mahogany plate surface to begin.</p>
+</div>
+</div>
+<!-- Right Side Panel: AXIS_Y_LIFT -->
+<div class="w-48 flex flex-col items-center">
+<div class="mb-4 font-label-caps text-label-caps text-secondary tracking-widest">AXIS_Y_LIFT</div>
+<div class="relative w-16 h-80 glass-recess rounded-full p-1 border border-outline-variant">
+<!-- Glass Tube markers -->
+<div class="absolute inset-0 flex flex-col justify-between py-8 px-2 pointer-events-none">
+<div class="w-full h-[1px] bg-outline opacity-30"></div>
+<div class="w-full h-[1px] bg-outline opacity-30"></div>
+<div class="w-full h-[1px] bg-tertiary-container opacity-60"></div>
+<div class="w-full h-[1px] bg-outline opacity-30"></div>
+<div class="w-full h-[1px] bg-outline opacity-30"></div>
+</div>
+<!-- Fluid Level -->
+<div class="absolute bottom-0 left-0 w-full mercury-fluid rounded-b-full transition-all duration-700" style="height: 42%;"></div>
+<!-- Copper Ring Indicator -->
+<div class="absolute left-[-8px] right-[-8px] h-2 bg-[#b8860b] border border-[#d4af37] shadow-lg rounded-sm" style="bottom: 42%;"></div>
+</div>
+</div>
+</div>
+</main>
+<!-- Side Navigation - Hidden on this focused screen but keeping structural data if needed for scaling -->
+<nav class="hidden">
+<div class="style_active_navigation">Oscillators</div>
+</nav>
+<!-- Bottom Status Bar -->
+<footer class="fixed bottom-0 left-0 w-full z-50 flex items-center justify-between px-margin-desktop py-4 bg-surface-container-high border-t border-outline-variant shadow-[0_-4px_10px_rgba(0,0,0,0.4)]">
+<div class="flex items-center gap-4">
+<div class="w-4 h-4 rounded-full bg-primary amber-bulb-on animate-pulse-slow"></div>
+<span class="font-label-caps text-label-caps text-primary tracking-[0.2em]">ANALYZING SPATIAL GEOMETRY</span>
+</div>
+<div class="flex items-center gap-12 font-data-mono text-data-mono text-outline uppercase">
+<div class="flex flex-col items-end">
+<span class="text-[10px] opacity-60">Signal Variance</span>
+<span class="text-tertiary">0.024ms</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] opacity-60">Sensor Plate</span>
+<span class="text-tertiary">Active_01</span>
+</div>
+</div>
+<div class="flex gap-4">
+<button class="px-8 py-2 bg-gradient-to-b from-[#d4af37] to-[#b8860b] text-on-primary-container font-label-caps text-label-caps rounded-sm border border-primary shadow-lg hover:brightness-110 active:shadow-inner active:translate-y-0.5 transition-all">
+                BYPASS_CAL
+            </button>
+</div>
+</footer>
+<script>
+        // Atmospheric Micro-interactions
+        document.addEventListener('mousemove', (e) => {
+            const zones = document.querySelectorAll('.brass-border');
+            zones.forEach(zone => {
+                const rect = zone.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                if (x > 0 && x < rect.width && y > 0 && y < rect.height) {
+                    zone.style.borderColor = '#f2ca50';
+                    zone.style.boxShadow = `0 0 15px rgba(242, 202, 80, 0.3)`;
+                } else {
+                    zone.style.borderColor = '#d4af37';
+                    zone.style.boxShadow = `inset 0 0 4px #b8860b, 0 0 8px rgba(212, 175, 55, 0.2)`;
+                }
+            });
+        });
+
+        // Simulate some fluid movement
+        setInterval(() => {
+            const gauges = document.querySelectorAll('.mercury-fluid');
+            gauges.forEach((g, i) => {
+                const baseHeight = i === 0 ? 65 : 42;
+                const variance = Math.sin(Date.now() / 1000) * 2;
+                g.style.height = `${baseHeight + variance}%`;
+                const ring = g.parentElement.querySelector('.bg-\\[\\#b8860b\\]');
+                if (ring) ring.style.bottom = `${baseHeight + variance}%`;
+            });
+        }, 50);
+    </script>
+<style>
+        .animate-spin-slow {
+            animation: spin 8s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</body></html>

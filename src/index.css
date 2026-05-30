@@ -72,3 +72,87 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+@keyframes rotate-phone {
+  0%, 15% {
+    transform: rotate(0deg);
+  }
+  75%, 100% {
+    transform: rotate(-90deg);
+  }
+}
+
+.animate-rotate-phone {
+  animation: rotate-phone 2.2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+}
+
+/* ==========================================================================
+   Acoustic Brass & Timber Steampunk Style Definitions
+   ========================================================================== */
+
+.wood-texture {
+  background-color: #17130f;
+  background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 2px, transparent 2px, transparent 4px),
+                    linear-gradient(to bottom, rgba(35, 31, 27, 0.7), rgba(23, 19, 15, 0.95));
+}
+
+.mahogany-texture {
+  background-color: #110e0a;
+  background-image: linear-gradient(rgba(23, 19, 15, 0.9), rgba(23, 19, 15, 0.95)), url(https://lh3.googleusercontent.com/aida-public/AB6AXuCJantM2ZPy0a48wPo7XJ6nVlpNvbY63bAj58NnXR1eSM-omCNdIrBhJMV-ILy0FNDJeOlrvapMvZMzYvxWuzh9EEvd04lLFBG0F8yQNNFfJVgd8b3GoSLcFd7LipW4tERjDZ7A34FcNtcUgtXVcRw1bdVZBRy6Jtvqk3j-badOC1qFzPbyxvy6r0uXqCTPgRR3p47TGZt1qcBdXNR5g3CE5nVW1FD_aAJXLKUqL2akGaJgxk2m_TIpllkMZnbNt0IRCAeS06KGXTw);
+}
+
+.brushed-brass {
+  background: linear-gradient(135deg, #d4af37 0%, #b8860b 50%, #946b08 100%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.brass-plate {
+  background: linear-gradient(145deg, #d4af37, #b8860b);
+  box-shadow: 2px 2px 0px #554300, inset 1px 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.copper-plate {
+  background: linear-gradient(145deg, #b87333, #8b4513);
+  box-shadow: 1px 1px 0px #321200;
+}
+
+.brushed-metal-plate {
+  background: linear-gradient(to bottom, #39342f, #231f1b);
+  border: 1px solid #4d4635;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.amber-glow-text {
+  color: #f2ca50;
+  text-shadow: 0 0 12px rgba(242, 202, 80, 0.6), 0 0 4px rgba(242, 202, 80, 0.4);
+}
+
+.amber-glow-box {
+  box-shadow: 0 0 15px rgba(242, 202, 80, 0.25), inset 0 0 8px rgba(242, 202, 80, 0.15);
+}
+
+.rivet {
+  width: 6px;
+  height: 6px;
+  background: radial-gradient(circle at 30% 30%, #99907c, #4d4635);
+  border-radius: 50%;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.6);
+}
+
+.mercury-tube-fill {
+  background: linear-gradient(to top, #723200, #f89c64, #ffc19e);
+  box-shadow: 0 0 15px rgba(248, 156, 100, 0.5);
+}
+
+.glass-module {
+  background: rgba(57, 52, 47, 0.35);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.6);
+}
+
+.mechanical-hover:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
