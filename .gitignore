@@ -29,3 +29,9 @@ dist-ssr
 # Antigravity AI configurations
 .antigravity/
 .antigravityrules
+
+# Local AI workspace & Developer guides
+docs/
+scripts/
+CODING_GUIDE.md
+IMPLEMENTATION_GUIDE.md
