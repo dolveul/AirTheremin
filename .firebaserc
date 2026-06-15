@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "evenight-cloud"
+  },
+  "targets": {
+    "evenight-cloud": {
+      "hosting": {
+        "air-site": [
+          "evenight-air"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
